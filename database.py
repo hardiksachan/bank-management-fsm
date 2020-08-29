@@ -1,4 +1,3 @@
-import mysql.connector
 import datetime
 
 from classes.accounts import AccountType, TransactionType
@@ -163,34 +162,37 @@ def open_new_account_customer(account, cus_id):
     print("Account No is : ", acc_no)
 
 
-def change_address_customer(ch, id, addr):
+def change_address_customer(ch, _id, addr):
     if ch == 1:
         sql = "update address set line1 = %s where customer_id = %s"
-        cur.execute(sql, (addr, id))
+        cur.execute(sql, (addr, _id))
 
     elif ch == 2:
         sql = "update address set line2 = %s where customer_id = %s"
-        cur.execute(sql, (addr, id))
+        cur.execute(sql, (addr, _id))
 
     elif ch == 3:
         sql = "update address set state = %s where customer_id = %s"
-        cur.execute(sql, (addr, id))
+        cur.execute(sql, (addr, _id))
 
     elif ch == 4:
         sql = "update address set city = %s where customer_id = %s"
-        cur.execute(sql, (addr, id))
+        cur.execute(sql, (addr, _id))
 
     elif ch == 5:
         sql = "update address set pincode = %s where customer_id = %s"
-        cur.execute(sql, (addr, id))
+        cur.execute(sql, (addr, _id))
 
     else:
         return
 
+    con.commit()
+    print("Details Updated Successfully")
+
 
 def get_all_info_customer(id):
     sql = "select * from customers where customer_id = %s"
-    cur.execute(sql, (id))
+    cur.execute(sql, (id,))
     res = cur.fetchall()
     if len(res) == 0:
         return None
