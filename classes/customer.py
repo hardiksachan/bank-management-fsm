@@ -60,4 +60,4 @@ class Customer:
 
 
 class CustomerStatus(enum.Enum):
-    locked = 1
+    locked = "locked"

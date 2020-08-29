@@ -1,3 +1,4 @@
+import enum
 from abc import ABC
 
 
@@ -26,3 +27,13 @@ class Account(ABC):
 
     def get_withdrawals_left(self):
         return self.withdrawals_left
+
+
+class AccountType(enum.Enum):
+    open = "open"
+    savings = "savings"
+
+
+class TransactionType(enum.Enum):
+    credit = "credit"
+    debit = "debit"
