@@ -107,7 +107,7 @@ def sign_up_customer(customer):
     status = customer.get_status()
     att = customer.get_login_attempts()
     sql = "insert into customers(first_name, last_name, status, login_attempts, password) " \
-          "values(%s,%s,%s,%d,%s)"
+          "values(%s,%s,%s,%s,%s)"
     data = (fname, lname, status, att, password)
     cur.execute(sql, data)
     customer_id = int(cur.lastrowid)
@@ -116,16 +116,16 @@ def sign_up_customer(customer):
     city = customer.get_addr_city()
     state = customer.get_addr_state()
     pincode = customer.get_addr_pincode()
-    sql = "insert into address values(%d,%s,%s,%s,%s,%d)"
+    sql = "insert into address values(%s,%s,%s,%s,%s,%s)"
     data = (customer_id, line1, line2, city, state, pincode)
     cur.execute(sql, data)
     con.commit()
     print("Congratulations ! Your Account was Created Successfully")
-    print("Your Customer ID : ", id)
+    print("Your Customer ID : ", customer_id)
 
 
 def login_customer(c_id, password):
-    sql = "select count(*) from customers where customer_id = %d and password = %s"
+    sql = "select count(*) from customers where customer_id = %s and password = %s"
     cur.execute(sql, (c_id, password))
     res = cur.fetchall()
     count = res[0][0]
@@ -148,13 +148,13 @@ def open_new_account_customer(account, cus_id):
     res = cur.fetchall()
     next_date = res[0][0].strftime("%d-%b-%Y")
     sql = "insert into accounts(customer_id, opened_on, account_type, status, balance, withdrawls_left, next_reset_data) " \
-          "values(%d, %s, %s, %s, %d, %d, %s);"
+          "values(%s, %s, %s, %s, %s, %s, %s);"
     data = (cus_id, opened_on, account_type, status, bal, withdrawals_left, next_date)
     cur.execute(sql, data)
     acc_no = int(cur.lastrowid)
     if account_type == "fd":
         term = account.get_deposit_term()
-        sql = "insert into fd values (%d,%d,%d)"
+        sql = "insert into fd values (%s,%s,%s)"
         data = (acc_no, bal, term)
         cur.execute(sql, data)
 
@@ -165,23 +165,23 @@ def open_new_account_customer(account, cus_id):
 
 def change_address_customer(ch, id, addr):
     if ch == 1:
-        sql = "update address set line1 = %s where customer_id = %d"
+        sql = "update address set line1 = %s where customer_id = %s"
         cur.execute(sql, (addr, id))
 
     elif ch == 2:
-        sql = "update address set line2 = %s where customer_id = %d"
+        sql = "update address set line2 = %s where customer_id = %s"
         cur.execute(sql, (addr, id))
 
     elif ch == 3:
-        sql = "update address set state = %s where customer_id = %d"
+        sql = "update address set state = %s where customer_id = %s"
         cur.execute(sql, (addr, id))
 
     elif ch == 4:
-        sql = "update address set city = %s where customer_id = %d"
+        sql = "update address set city = %s where customer_id = %s"
         cur.execute(sql, (addr, id))
 
     elif ch == 5:
-        sql = "update address set pincode = %d where customer_id = %d"
+        sql = "update address set pincode = %s where customer_id = %s"
         cur.execute(sql, (addr, id))
 
     else:
@@ -189,7 +189,7 @@ def change_address_customer(ch, id, addr):
 
 
 def get_all_info_customer(id):
-    sql = "select * from customers where customer_id = %d"
+    sql = "select * from customers where customer_id = %s"
     cur.execute(sql, (id))
     res = cur.fetchall()
     if len(res) == 0:
@@ -207,13 +207,13 @@ def get_all_info_account(acc_no, id, msg):
     account = None
     sql = None
     if msg == "transfer":
-        sql = "select * from accounts where account_no = %d and account_type != 'fd' and status = 'open'"
+        sql = "select * from accounts where account_no = %s and account_type != 'fd' and status = 'open'"
         cur.execute(sql, (acc_no))
     elif msg == "loan":
-        sql = "select * from accounts where account_no = %d and customer_id = %d and account_type = 'savings' and status = 'open'"
+        sql = "select * from accounts where account_no = %s and customer_id = %s and account_type = 'savings' and status = 'open'"
         cur.execute(sql, (acc_no, id))
     else:
-        sql = "select * from accounts where account_no = %d and customer_id = %d and account_type != 'fd' and status = 'open'"
+        sql = "select * from accounts where account_no = %s and customer_id = %s and account_type != 'fd' and status = 'open'"
         cur.execute(sql, (acc_no, id))
 
     res = cur.fetchall()
@@ -240,9 +240,9 @@ def money_deposit_customer(account, amount):
     bal = account.get_balance()
     acc_no = account.get_account_no()
     type = TransactionType.credit
-    sql = "update accounts set balance = %d where account_no = %d"
+    sql = "update accounts set balance = %s where account_no = %s"
     cur.execute(sql, (bal, acc_no))
-    sql = "insert into transactions(account_no, type, amount, balance, transaction_date) values (%d, %s, %d, %d, %s);"
+    sql = "insert into transactions(account_no, type, amount, balance, transaction_date) values (%s, %s, %s, %s, %s);"
     date = datetime.datetime.now().strftime("%d-%b-%Y")
     data = (acc_no, type, amount, bal, date)
     cur.execute(sql, data)
@@ -255,21 +255,21 @@ def money_withdraw_customer(account, amount, msg):
     bal = account.get_balance()
     acc_no = account.get_account_no()
     type = TransactionType.debit
-    sql = "update accounts set balance = %d where account_no = %d"
+    sql = "update accounts set balance = %s where account_no = %s"
     cur.execute(sql, (bal, acc_no))
-    sql = "insert into transactions(account_no, type, amount, balance, transaction_date) values (%d, %s, %d, %d, %s);"
+    sql = "insert into transactions(account_no, type, amount, balance, transaction_date) values (%s, %s, %s, %s, %s);"
     date = datetime.datetime.now().strftime("%d-%b-%Y")
     data = (acc_no, type, amount, bal, date)
     cur.execute(sql, data)
     if acc_type == AccountType.savings and msg != "transfer":
         wd_left -= 1
-        sql = "update accounts set withdrawals_left = %d where account_no = %d"
+        sql = "update accounts set withdrawals_left = %s where account_no = %s"
         cur.execute(sql, (wd_left, acc_no))
     con.commit()
 
 
 def get_transactions_account(acc_no, date_from, date_to):
-    sql = """select transaction_date,type,amount,balance from transactions where account_no = %d
+    sql = """select transaction_date,type,amount,balance from transactions where account_no = %s
               and transaction_date between %s and %s order by transaction_id"""
     cur.execute(sql, (acc_no, date_from, date_to))
     res = cur.fetchall()
@@ -300,10 +300,10 @@ def login_admin(id, password):
 def close_account_customer(account):
     acc_no = account.get_account_no()
     balance = account.get_balance()
-    sql = "update accounts set status='closed',balance = 0 where account_no = %d"
+    sql = "update accounts set status='closed',balance = 0 where account_no = %s"
     cur.execute(sql, (acc_no,))
     closed_on = datetime.datetime.now().strftime("%d-%b-%Y")
-    sql = "insert into closed_accounts values(%d, %s)"
+    sql = "insert into closed_accounts values(%s, %s)"
     cur.execute(sql, (acc_no, closed_on))
     print("Account Closed Successfully !")
     print("Rs ", balance, " will be delivered to your address shortly")
@@ -311,21 +311,21 @@ def close_account_customer(account):
 
 
 def get_loan_customer(acc_no, loan_amt, loan_term):
-    sql = "insert into loans(customer_account_no, loan_amount, repay_term) values (%d,%d,%d)"
+    sql = "insert into loans(customer_account_no, loan_amount, repay_term) values (%s,%s,%s)"
     cur.execute(sql, (acc_no, loan_amt, loan_term))
     con.commit()
     print("Loan Availed Successfully")
 
 
 def reset_withdrawals():
-    sql = """update accounts set withdrawals_left = 10,next_reset_date = add_months(next_reset_date,1)
-              where account_type = 'savings' and sysdate >= next_reset_date"""
+    sql = """update accounts set withdrawals_left = 10,next_reset_date = date_add(next_reset_date, interval 1 month)
+              where account_type = 'savings' and curdate() >= next_reset_date"""
     cur.execute(sql)
     con.commit()
 
 
 def reset_login_attempts(id):
-    sql = "update customers set login_attempts = 3 where customer_id = %d"
+    sql = "update customers set login_attempts = 3 where customer_id = %s"
     cur.execute(sql, (id,))
     con.commit()
 
@@ -334,6 +334,6 @@ def update_customer(customer):
     id = customer.get_customer_id()
     status = customer.get_status()
     att = customer.get_login_attempts()
-    sql = "update customers set status = %s,login_attempts = %d where customer_id = %d"
+    sql = "update customers set status = %s,login_attempts = %s where customer_id = %s"
     cur.execute(sql, (status, att, id))
     con.commit()

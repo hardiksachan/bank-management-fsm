@@ -9,7 +9,7 @@ class MainMenuState(State):
         self.upper_bound = 3
 
     def enter(self):
-        super().enter()
+        self.showUI()
         self.update_selection()
 
     def showUI(self):

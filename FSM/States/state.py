@@ -14,8 +14,9 @@ class State(ABC):
         self.lower_bound = -1
         self.upper_bound = -1
 
+    @abstractmethod
     def enter(self):
-        self.showUI()
+        pass
 
     def exit(self):
         os.system('cls||clear')
