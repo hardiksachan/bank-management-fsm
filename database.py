@@ -151,7 +151,7 @@ def open_new_account_customer(account, cus_id):
     data = (cus_id, opened_on, account_type.value, status.value, bal, withdrawals_left, next_date)
     cur.execute(sql, data)
     acc_no = int(cur.lastrowid)
-    if account_type == "fd":
+    if account_type.value == "fd":
         term = account.get_deposit_term()
         sql = "insert into fd values (%s,%s,%s)"
         data = (acc_no, bal, term)

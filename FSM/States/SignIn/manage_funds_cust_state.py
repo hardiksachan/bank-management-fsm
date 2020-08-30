@@ -1,5 +1,7 @@
 import os
 
+from tabulate import tabulate
+
 import database
 import db_admin
 from FSM.States.SignIn.sign_in_base_state import SignInParentState
@@ -141,9 +143,7 @@ class ManageFundsCustomerState(SignInParentState):
                 if loan_term > 0:
                     database.get_loan_customer(account.get_account_no(), loan_amt, loan_term)
                     res = db_admin.get_loan_report(self.id)
-                    print("Account No \t\t\t\t Amount \t\t\t\t Repay Term")
-                    for i in range(0, len(res)):
-                        print(res[i][0], "   \t\t\t\t\t   ", res[i][1], "   \t\t\t\t   ", res[i][2])
+                    print(tabulate(res, headers=["Account No", "Amount", "Repay Term"], tablefmt="pretty"))
                 else:
                     print("Sorry ! Invalid Loan Term")
 

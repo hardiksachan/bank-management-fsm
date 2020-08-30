@@ -26,6 +26,7 @@ class State(ABC):
             sel = int(input("\n> "))
         except:
             print("Invalid Choice")
+            self.update_selection()
         while not(self.lower_bound <= sel <= self.upper_bound):
             print("Invalid Choice")
             try:

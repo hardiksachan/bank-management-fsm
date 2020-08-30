@@ -1,6 +1,9 @@
 import os
 
+from tabulate import tabulate
+
 import database
+import db_admin
 from FSM.States.SignIn.sign_in_base_state import SignInParentState
 from classes.accounts import AccountType
 from classes.current_account import Current
@@ -14,14 +17,6 @@ class OpenAccountState(SignInParentState):
         super().__init__(state_machine, app)
         self.lower_bound = 0
         self.upper_bound = 3
-
-    # def enter(self):
-    #     if self.id is None:
-    #         print("Please Sign In First!")
-    #         input("Press ENTER to continue...")
-    #         self.state_machine.change_state(self.app.sign_in_state)
-    #     self.showUI()
-    #     self.update_selection()
 
     def check_transitions(self):
         if self.selection == 0:
@@ -81,11 +76,10 @@ class OpenAccountState(SignInParentState):
         account = self.get_new_account()
         if account is not None:
             database.open_new_account_customer(account, self.id)
-            # if ch == 3:
-            #     res = db_admin.get_fd_report(id)
-            #     print("Account No \t\t\t\t Amount \t\t\t\t Deposit Term")
-            #     for i in range(0, len(res)):
-            #         print(res[i][0], "   \t\t\t\t\t   ", res[i][1], "   \t\t\t\t   ", res[i][2])
+            if self.selection == 3:
+                res = db_admin.get_fd_report(self.id)
+                print(res)
+                print(tabulate(res, headers=["Account No", "Amount", "Deposit Term"], tablefmt="pretty"))
 
         else:
             print("Invalid Choice")
