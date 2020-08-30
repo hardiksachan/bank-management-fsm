@@ -1,6 +1,7 @@
 import os
 
 import database
+import db_admin
 from FSM.States.SignIn.sign_in_base_state import SignInParentState
 
 
@@ -23,6 +24,11 @@ class ManageFundsCustomerState(SignInParentState):
             self.update_selection()
         elif self.selection == 3:
             self.transfer_money()
+            input("\nPress ENTER to continue...")
+            self.showUI()
+            self.update_selection()
+        elif self.selection == 4:
+            self.avail_loan()
             input("\nPress ENTER to continue...")
             self.showUI()
             self.update_selection()
@@ -110,3 +116,39 @@ class ManageFundsCustomerState(SignInParentState):
 
         else:
             print("Sorry Account No doesn't match")
+
+    def avail_loan(self):
+        try:
+            acc_no = int(input("\nEnter Your Savings Account No : "))
+        except:
+            print("Invalid Account No")
+            return
+        account = database.get_all_info_account(acc_no, self.id, "loan")
+        if account is not None:
+            max_loan = 2 * account.get_balance()
+            msg = "\nEnter loan amount (Max Amount : Rs " + str(max_loan) + " ) (in multiples of 1000) : "
+            try:
+                loan_amt = int(input(msg))
+            except:
+                print("Invalid Amount")
+                return
+            if max_loan >= loan_amt > 0 and loan_amt % 1000 == 0:
+                try:
+                    loan_term = int(input("\nEnter repayment term (in months) : "))
+                except:
+                    print("Invalid repayment term")
+                    return
+                if loan_term > 0:
+                    database.get_loan_customer(account.get_account_no(), loan_amt, loan_term)
+                    res = db_admin.get_loan_report(self.id)
+                    print("Account No \t\t\t\t Amount \t\t\t\t Repay Term")
+                    for i in range(0, len(res)):
+                        print(res[i][0], "   \t\t\t\t\t   ", res[i][1], "   \t\t\t\t   ", res[i][2])
+                else:
+                    print("Sorry ! Invalid Loan Term")
+
+            else:
+                print("Sorry ! Invalid Loan Amount")
+
+        else:
+            print("Sorry! Account No Doesn't match")
