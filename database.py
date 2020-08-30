@@ -1,6 +1,6 @@
 import datetime
 
-from classes.accounts import AccountType, TransactionType
+from classes.accounts import AccountType, TransactionType, AccountStatus
 from classes.current_account import Current
 from classes.customer import Customer
 from classes.savings_account import Savings
@@ -138,17 +138,17 @@ def open_new_account_customer(account, cus_id):
     withdrawals_left = None
     account_type = account.get_account_type()
     bal = account.get_balance()
-    opened_on = datetime.datetime.now().strftime("%d-%b-%Y")
-    status = AccountType.open
+    opened_on = datetime.datetime.now().strftime("%Y-%m-%d")
+    status = AccountStatus.open
     if account_type == AccountType.savings:
         withdrawals_left = 10
-    sql = "select add_months(sysdate,1) from dual"
+    sql = "select date_add(CURRENT_DATE(), INTERVAL 1 MONTH) from dual"
     cur.execute(sql)
     res = cur.fetchall()
-    next_date = res[0][0].strftime("%d-%b-%Y")
-    sql = "insert into accounts(customer_id, opened_on, account_type, status, balance, withdrawls_left, next_reset_data) " \
+    next_date = res[0][0].strftime("%Y-%m-%d")
+    sql = "insert into accounts(customer_id, opened_on, account_type, status, balance, withdrawals_left, next_reset_date) " \
           "values(%s, %s, %s, %s, %s, %s, %s);"
-    data = (cus_id, opened_on, account_type, status, bal, withdrawals_left, next_date)
+    data = (cus_id, opened_on, account_type.value, status.value, bal, withdrawals_left, next_date)
     cur.execute(sql, data)
     acc_no = int(cur.lastrowid)
     if account_type == "fd":
@@ -245,7 +245,7 @@ def money_deposit_customer(account, amount):
     sql = "update accounts set balance = %s where account_no = %s"
     cur.execute(sql, (bal, acc_no))
     sql = "insert into transactions(account_no, type, amount, balance, transaction_date) values (%s, %s, %s, %s, %s);"
-    date = datetime.datetime.now().strftime("%d-%b-%Y")
+    date = datetime.datetime.now().strftime("%Y-%m-%d")
     data = (acc_no, type, amount, bal, date)
     cur.execute(sql, data)
     con.commit()
@@ -260,7 +260,7 @@ def money_withdraw_customer(account, amount, msg):
     sql = "update accounts set balance = %s where account_no = %s"
     cur.execute(sql, (bal, acc_no))
     sql = "insert into transactions(account_no, type, amount, balance, transaction_date) values (%s, %s, %s, %s, %s);"
-    date = datetime.datetime.now().strftime("%d-%b-%Y")
+    date = datetime.datetime.now().strftime("%Y-%m-%d")
     data = (acc_no, type, amount, bal, date)
     cur.execute(sql, data)
     if acc_type == AccountType.savings and msg != "transfer":
@@ -304,7 +304,7 @@ def close_account_customer(account):
     balance = account.get_balance()
     sql = "update accounts set status='closed',balance = 0 where account_no = %s"
     cur.execute(sql, (acc_no,))
-    closed_on = datetime.datetime.now().strftime("%d-%b-%Y")
+    closed_on = datetime.datetime.now().strftime("%Y-%m-%d")
     sql = "insert into closed_accounts values(%s, %s)"
     cur.execute(sql, (acc_no, closed_on))
     print("Account Closed Successfully !")

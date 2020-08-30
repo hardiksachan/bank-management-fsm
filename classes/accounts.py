@@ -30,8 +30,13 @@ class Account(ABC):
 
 
 class AccountType(enum.Enum):
-    open = "open"
     savings = "savings"
+    current = "current"
+    fd = "fd"
+
+
+class AccountStatus(enum.Enum):
+    open = "open"
 
 
 class TransactionType(enum.Enum):

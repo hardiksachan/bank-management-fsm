@@ -30,8 +30,14 @@ class SignInState(State):
         if self.id is None:
             self.state_machine.change_state(self.app.main_menu)
         elif self.selection == 1:
-            self.app.address_update_state.set_id(self.id)
+            # self.app.address_update_state.set_id(self.id)
             self.state_machine.change_state(self.app.address_update_state)
+        elif self.selection == 2:
+            # self.app.open_new_account_state.set_id(self.id)
+            self.state_machine.change_state(self.app.open_new_account_state)
+        elif self.selection == 0:
+            self.set_id_all_states(None)
+            self.state_machine.change_state(self.app.main_menu)
         else:
             self.state_machine.change_state(self.app.main_menu)
 
@@ -65,9 +71,8 @@ class SignInState(State):
             res = database.login_customer(id, password)
             if res:
                 database.reset_login_attempts(id)
+                self.set_id_all_states(id)
                 print("Login Successful")
-                self.id = id
-
             else:
                 att = customer.get_login_attempts() - 1
                 customer.set_login_attempts(att)
@@ -75,3 +80,12 @@ class SignInState(State):
                 print("Incorrect Password")
         else:
             print("Customer doesn't exist")
+
+    def logout(self):
+        self.set_id_all_states(None)
+
+    def set_id_all_states(self, _id):
+        self.id = _id
+        self.app.address_update_state.set_id(_id)
+        self.app.open_new_account_state.set_id(_id)
+        # TODO: Add more states when implemented

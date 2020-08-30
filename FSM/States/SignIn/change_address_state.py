@@ -22,7 +22,7 @@ class ChangeAddressState(State):
 
     def check_transitions(self):
         if self.selection == 0:
-            self.app.sign_in_state.set_id(self.id)
+            # self.app.sign_in_state.set_id(self.id)
             self.state_machine.change_state(self.app.sign_in_state)
         else:
             self.update_address()
