@@ -1,28 +1,27 @@
 import os
 
 import database
-from FSM.States.state import State
+from FSM.States.SignIn.sign_in_base_state import SignInParentState
 from classes.accounts import AccountType
 from classes.current_account import Current
 from classes.fixed_deposit_account import FixedDeposit
 from classes.savings_account import Savings
 
 
-class OpenAccountState(State):
+class OpenAccountState(SignInParentState):
 
     def __init__(self, state_machine, app):
         super().__init__(state_machine, app)
-        self.id = None
         self.lower_bound = 0
         self.upper_bound = 3
 
-    def enter(self):
-        if self.id is None:
-            print("Please Sign In First!")
-            input("Press ENTER to continue...")
-            self.state_machine.change_state(self.app.sign_in_state)
-        self.showUI()
-        self.update_selection()
+    # def enter(self):
+    #     if self.id is None:
+    #         print("Please Sign In First!")
+    #         input("Press ENTER to continue...")
+    #         self.state_machine.change_state(self.app.sign_in_state)
+    #     self.showUI()
+    #     self.update_selection()
 
     def check_transitions(self):
         if self.selection == 0:
@@ -30,6 +29,7 @@ class OpenAccountState(State):
             self.state_machine.change_state(self.app.sign_in_state)
         else:
             self.open_new_account()
+            input("\nPress ENTER to continue...")
             self.showUI()
             self.update_selection()
 
@@ -40,9 +40,6 @@ class OpenAccountState(State):
         print("2. Open Current Account")
         print("3. Open Fixed Deposit Account")
         print("0. Exit")
-
-    def set_id(self, _id):
-        self.id = _id
 
     def get_new_account(self):
         msg = "Enter Balance "
@@ -92,5 +89,3 @@ class OpenAccountState(State):
 
         else:
             print("Invalid Choice")
-
-        input("\nPress ENTER to continue...")

@@ -210,7 +210,7 @@ def get_all_info_account(acc_no, id, msg):
     sql = None
     if msg == "transfer":
         sql = "select * from accounts where account_no = %s and account_type != 'fd' and status = 'open'"
-        cur.execute(sql, (acc_no))
+        cur.execute(sql, (acc_no,))
     elif msg == "loan":
         sql = "select * from accounts where account_no = %s and customer_id = %s and account_type = 'savings' and status = 'open'"
         cur.execute(sql, (acc_no, id))
@@ -246,7 +246,7 @@ def money_deposit_customer(account, amount):
     cur.execute(sql, (bal, acc_no))
     sql = "insert into transactions(account_no, type, amount, balance, transaction_date) values (%s, %s, %s, %s, %s);"
     date = datetime.datetime.now().strftime("%Y-%m-%d")
-    data = (acc_no, type, amount, bal, date)
+    data = (acc_no, type.value, amount, bal, date)
     cur.execute(sql, data)
     con.commit()
 
@@ -261,8 +261,9 @@ def money_withdraw_customer(account, amount, msg):
     cur.execute(sql, (bal, acc_no))
     sql = "insert into transactions(account_no, type, amount, balance, transaction_date) values (%s, %s, %s, %s, %s);"
     date = datetime.datetime.now().strftime("%Y-%m-%d")
-    data = (acc_no, type, amount, bal, date)
+    data = (acc_no, type.value, amount, bal, date)
     cur.execute(sql, data)
+    # TODO: add .value to account type in production
     if acc_type == AccountType.savings and msg != "transfer":
         wd_left -= 1
         sql = "update accounts set withdrawals_left = %s where account_no = %s"
