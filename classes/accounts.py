@@ -37,6 +37,7 @@ class AccountType(enum.Enum):
 
 class AccountStatus(enum.Enum):
     open = "open"
+    close = "close"
 
 
 class TransactionType(enum.Enum):

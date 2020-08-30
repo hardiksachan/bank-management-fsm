@@ -6,6 +6,7 @@ import database
 import db_admin
 import validate
 from FSM.States.SignIn.sign_in_base_state import SignInParentState
+from classes.accounts import AccountStatus
 from classes.customer import CustomerStatus, Customer
 
 
@@ -39,6 +40,10 @@ class SignInState(SignInParentState):
             self.state_machine.change_state(self.app.manage_funds_customer_state)
         elif self.selection == 4:
             self.print_statement()
+            input("\nPress ENTER to continue...")
+            self.showUI()
+        elif self.selection == 5:
+            self.close_account()
             input("\nPress ENTER to continue...")
             self.showUI()
         elif self.selection == 0:
@@ -110,3 +115,15 @@ class SignInState(SignInParentState):
                 print(tabulate(res, headers=["Date", "Transaction Type", "Amount", "Balance"], tablefmt="pretty"))
             else:
                 print("Please Enter Valid Dates")
+
+    def close_account(self):
+        try:
+            acc_no = int(input("\nEnter Account No to close : "))
+        except:
+            print("Invalid Account No")
+            return
+        account = database.get_all_info_account(acc_no, self.id, AccountStatus.close.value)
+        if account is not None:
+            database.close_account_customer(account)
+        else:
+            print("\nSorry Account No doesn't match")
