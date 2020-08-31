@@ -14,7 +14,7 @@ class SignInState(SignInParentState):
     def __init__(self, state_machine, app):
         super().__init__(state_machine, app)
         self.lower_bound = 0
-        self.upper_bound = 6
+        self.upper_bound = 7
 
     def enter(self):
         if self.id is not None:
@@ -50,6 +50,10 @@ class SignInState(SignInParentState):
             self.change_password()
             input("\nPress ENTER to continue...")
             self.showUI()
+        elif self.selection == 7:
+            self.view_all_accounts()
+            input("\nPress ENTER to continue...")
+            self.showUI()
         elif self.selection == 0:
             self.set_id_all_states(None)
             self.state_machine.change_state(self.app.main_menu)
@@ -65,6 +69,7 @@ class SignInState(SignInParentState):
         print("4. Print Statement")
         print("5. Account Closure")
         print("6. Password Change")
+        print("7. View All Accounts")
         print("0. Logout")
         self.update_selection()
 
@@ -140,3 +145,7 @@ class SignInState(SignInParentState):
             password = input()
 
         database.change_password_customer(password, self.id)
+
+    def view_all_accounts(self):
+        res = database.get_customer_accounts(self.id)
+        print(tabulate(res, headers=["Account No", "Amount", "Opened On", "Status"], tablefmt="pretty"))
