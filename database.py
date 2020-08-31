@@ -340,3 +340,11 @@ def update_customer(customer):
     sql = "update customers set status = %s,login_attempts = %s where customer_id = %s"
     cur.execute(sql, (status, att, id))
     con.commit()
+
+
+def change_password_customer(new_pass, _id):
+    sql = "update customers set password = %s where customer_id = %s"
+    cur.execute(sql, (new_pass, _id))
+
+    con.commit()
+    print("Password Updated Successfully")

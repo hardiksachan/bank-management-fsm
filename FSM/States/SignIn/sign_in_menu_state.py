@@ -14,7 +14,7 @@ class SignInState(SignInParentState):
     def __init__(self, state_machine, app):
         super().__init__(state_machine, app)
         self.lower_bound = 0
-        self.upper_bound = 5
+        self.upper_bound = 6
 
     def enter(self):
         if self.id is not None:
@@ -46,6 +46,10 @@ class SignInState(SignInParentState):
             self.close_account()
             input("\nPress ENTER to continue...")
             self.showUI()
+        elif self.selection == 6:
+            self.change_password()
+            input("\nPress ENTER to continue...")
+            self.showUI()
         elif self.selection == 0:
             self.set_id_all_states(None)
             self.state_machine.change_state(self.app.main_menu)
@@ -60,6 +64,7 @@ class SignInState(SignInParentState):
         print("3. Manage Funds")
         print("4. Print Statement")
         print("5. Account Closure")
+        print("6. Password Change")
         print("0. Logout")
         self.update_selection()
 
@@ -127,3 +132,11 @@ class SignInState(SignInParentState):
             database.close_account_customer(account)
         else:
             print("\nSorry Account No doesn't match")
+
+    def change_password(self):
+        password = input("Enter New password (min 8 char and max 20 char)\n> ")
+        while len(password) < 8 or len(password) > 20:
+            print("Please Enter password in given range\n> ")
+            password = input()
+
+        database.change_password_customer(password, self.id)
