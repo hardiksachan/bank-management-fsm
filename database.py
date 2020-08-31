@@ -350,7 +350,7 @@ def change_password_customer(new_pass, _id):
     print("Password Updated Successfully")
 
 def get_customer_accounts(cus_id):
-    sql = "select account_no,balance,opened_on, status from accounts where customer_id = %s"
+    sql = "select account_no,balance,opened_on, status, account_type from accounts where customer_id = %s"
     cur.execute(sql, (cus_id,))
     res = cur.fetchall()
     return res
