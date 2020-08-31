@@ -27,4 +27,8 @@ class MainMenuState(State):
         elif self.selection == 2:
             self.state_machine.change_state(self.app.sign_in_state)
         elif self.selection == 3:
-            self.state_machine.change_state(self.app.admin_sign_in_state)
+            # self.state_machine.change_state(self.app.admin_sign_in_state)
+            print("Coming Soon...")
+            input("Press ENTER to continue...")
+            self.showUI()
+            self.update_selection()
