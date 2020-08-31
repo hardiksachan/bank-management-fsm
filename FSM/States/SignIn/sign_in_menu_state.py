@@ -96,6 +96,7 @@ class SignInState(SignInParentState):
                 customer.set_login_attempts(att)
                 database.update_customer(customer)
                 print("Incorrect Password")
+                input("\nPress ENTER to continue...")
         else:
             print("Customer doesn't exist")
 
