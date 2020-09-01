@@ -123,7 +123,7 @@ class SignInState(SignInParentState):
             date_to = input("Date To : ")
             if validate.validate_date(date_from, date_to):
                 res = database.get_transactions_account(acc_no, date_from, date_to)
-                print(tabulate(res, headers=["Date", "Transaction Type", "Amount", "Balance"], tablefmt="pretty"))
+                print(tabulate(res, headers=["Date", "Transaction Type", "Amount", "Balance", "Account Type"], tablefmt="pretty"))
             else:
                 print("Please Enter Valid Dates")
 

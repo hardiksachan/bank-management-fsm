@@ -53,10 +53,12 @@ class OpenAccountState(SignInParentState):
             msg += "(min 1000) : "
         else:
             return None
-
-        balance = int(input(msg))
-        while not account.open_account(balance):
-            balance = int(input("\nEnter Valid Balance : "))
+        try:
+            balance = int(input(msg))
+            while not account.open_account(balance):
+                balance = int(input("\nEnter Valid Balance : "))
+        except:
+            return
 
         if self.selection == 3:
             try:
