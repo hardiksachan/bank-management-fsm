@@ -1,5 +1,5 @@
 import database
-from app import App
+from app_gui import App
 
 database.make_all_tables()
 database.reset_withdrawals()
