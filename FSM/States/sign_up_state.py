@@ -20,6 +20,34 @@ class SignUpState(State):
 
     def sign_up(self):
         customer: Customer = Customer()
+
+        user_input = self.input_sign_up()
+
+        customer.set_first_name(user_input["first-name"])
+        customer.set_last_name(user_input["last-name"])
+        customer.set_password(user_input["password"])
+        customer.set_status(CustomerStatus.open.value)
+        customer.set_login_attempts(3)
+
+        addr: Address = Address()
+        addr.set_line_1(user_input["add-line1"])
+        addr.set_line_2(user_input["add-line2"])
+        addr.set_city(user_input["city"])
+        addr.set_state(user_input["state"])
+        addr.set_pincode(user_input["pincode"])
+
+        customer.set_address(addr)
+
+        customer_id = database.sign_up_customer(customer)
+
+        self.display_msg([
+            "Congratulations ! Your Account was Created Successfully",
+            "Your Customer ID : " + customer_id
+        ])
+
+        self.state_machine.change_state(self.app.main_menu)
+
+    def input_sign_up(self):
         first_name = input("Enter First Name\n> ")
         last_name = input("Enter Last Name\n> ")
         add_line1 = input("Enter Address Line 1\n> ")
@@ -40,23 +68,13 @@ class SignUpState(State):
             print("Please Enter password in given range\n> ")
             password = input()
 
-        customer.set_first_name(first_name)
-        customer.set_last_name(last_name)
-        customer.set_password(password)
-        customer.set_status(CustomerStatus.open.value)
-        customer.set_login_attempts(3)
-
-        addr: Address = Address()
-        addr.set_line_1(add_line1)
-        addr.set_line_2(add_line2)
-        addr.set_city(city)
-        addr.set_state(state)
-        addr.set_pincode(pincode)
-
-        customer.set_address(addr)
-
-        database.sign_up_customer(customer)
-
-        input("\nPress ENTER to continue...")
-
-        self.state_machine.change_state(self.app.main_menu)
+        return {
+            "first-name": first_name,
+            "last-name": last_name,
+            "add-line1": add_line1,
+            "add-line2": add_line2,
+            "city": city,
+            "state": state,
+            "pincode": pincode,
+            "password": password
+        }

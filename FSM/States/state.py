@@ -27,7 +27,7 @@ class State(ABC):
         except:
             print("Invalid Choice")
             self.update_selection()
-        while not(self.lower_bound <= sel <= self.upper_bound):
+        while not (self.lower_bound <= sel <= self.upper_bound):
             print("Invalid Choice")
             try:
                 sel = int(input("> "))
@@ -43,3 +43,8 @@ class State(ABC):
     @abstractmethod
     def showUI(self):
         pass
+
+    def display_msg(self, msg):
+        for m in msg:
+            print(m)
+        input("Press ENTER to continue...")

@@ -119,8 +119,9 @@ def sign_up_customer(customer):
     data = (customer_id, line1, line2, city, state, pincode)
     cur.execute(sql, data)
     con.commit()
-    print("Congratulations ! Your Account was Created Successfully")
-    print("Your Customer ID : ", customer_id)
+    # print("Congratulations ! Your Account was Created Successfully")
+    # print("Your Customer ID : ", customer_id)
+    return customer_id
 
 
 def login_customer(c_id, password):
