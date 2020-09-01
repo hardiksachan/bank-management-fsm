@@ -22,6 +22,7 @@ class SignUpState(State):
         customer: Customer = Customer()
 
         user_input = self.input_sign_up()
+        print("user input", user_input)
 
         if user_input is None:
             self.display_msg(["Please try again!"])
