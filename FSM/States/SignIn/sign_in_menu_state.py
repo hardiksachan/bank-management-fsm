@@ -149,4 +149,4 @@ class SignInState(SignInParentState):
 
     def view_all_accounts(self):
         res = database.get_customer_accounts(self.id)
-        print(tabulate(res, headers=["Account No", "Amount", "Opened On", "Status"], tablefmt="pretty"))
+        print(tabulate(res, headers=["Account No", "Amount", "Opened On", "Status", "Type"], tablefmt="pretty"))
