@@ -23,6 +23,10 @@ class SignUpState(State):
 
         user_input = self.input_sign_up()
 
+        if user_input is None:
+            self.display_msg(["Please try again!"])
+            self.state_machine.change_state(self.app.main_menu)
+
         customer.set_first_name(user_input["first-name"])
         customer.set_last_name(user_input["last-name"])
         customer.set_password(user_input["password"])
@@ -42,7 +46,7 @@ class SignUpState(State):
 
         self.display_msg([
             "Congratulations ! Your Account was Created Successfully",
-            "Your Customer ID : " + customer_id
+            "Your Customer ID : " + str(customer_id)
         ])
 
         self.state_machine.change_state(self.app.main_menu)
