@@ -10,26 +10,28 @@ class SignUpStateGUI(SignUpState):
         self.main_frame = None
 
     def enter(self):
+        print("Sign Up State Enter")
+
         def add():
             try:
-                pincode = int(e7.get())
+                pincode = int(tb_pincode.get())
                 if pincode < 100000 or pincode > 999999:
                     self.display_msg(["Invalid Pincode"])
                     return
             except:
                 self.display_msg(["Invalid Pincode"])
                 return
-            password = e8.get()
+            password = tb_password.get()
             if len(password) < 8 or len(password) > 20:
                 self.display_msg(["Please Enter password in given range"])
                 return
             self.sign_up({
-                "first-name": e1.get(),
-                "last-name": e2.get(),
-                "add-line1": e3.get(),
-                "add-line2": e4.get(),
-                "city": e5.get(),
-                "state": e6.get(),
+                "first-name": tb_fname.get(),
+                "last-name": tb_lname.get(),
+                "add-line1": tb_line1.get(),
+                "add-line2": tb_line2.get(),
+                "city": tb_city.get(),
+                "state": tb_state.get(),
                 "pincode": pincode,
                 "password": password
             })
@@ -48,29 +50,30 @@ class SignUpStateGUI(SignUpState):
         Label(master, text="state").grid(row=5)
         Label(master, text="pincode", ).grid(row=6)
         Label(master, text="password", ).grid(row=7)
-        e1 = Entry(master, textvariable=v)
-        e1.grid(row=0, column=1)
-        e2 = Entry(master, textvariable=v)
-        e2.grid(row=1, column=1)
-        e3 = Entry(master, textvariable=v)
-        e3.grid(row=2, column=1)
-        e4 = Entry(master, textvariable=v)
-        e4.grid(row=3, column=1)
-        e5 = Entry(master, textvariable=v)
-        e5.grid(row=4, column=1)
-        e6 = Entry(master, textvariable=v)
-        e6.grid(row=5, column=1)
-        e7 = Entry(master, textvariable=v)
-        e7.grid(row=6, column=1)
-        e8 = Entry(master, textvariable=v)
-        e8.grid(row=7, column=1)
-        b = Button(master, text="save", command=add)
-        b.grid()
+        tb_fname = Entry(master, textvariable=v)
+        tb_fname.grid(row=0, column=1)
+        tb_lname = Entry(master, textvariable=v)
+        tb_lname.grid(row=1, column=1)
+        tb_line1 = Entry(master, textvariable=v)
+        tb_line1.grid(row=2, column=1)
+        tb_line2 = Entry(master, textvariable=v)
+        tb_line2.grid(row=3, column=1)
+        tb_city = Entry(master, textvariable=v)
+        tb_city.grid(row=4, column=1)
+        tb_state = Entry(master, textvariable=v)
+        tb_state.grid(row=5, column=1)
+        tb_pincode = Entry(master, textvariable=v)
+        tb_pincode.grid(row=6, column=1)
+        tb_password = Entry(master, textvariable=v)
+        tb_password.grid(row=7, column=1)
+        btn_save = Button(master, text="save", command=add)
+        btn_save.grid()
         self.app.tk_master.mainloop()
 
     def display_msg(self, msg):
         messagebox.showinfo("info", "\n".join(msg), parent=self.app.tk_master)
 
     def exit(self):
+        print("Sign Up State Exit")
         self.main_frame.destroy()
         self.main_frame = None
