@@ -309,9 +309,8 @@ def close_account_customer(account):
     closed_on = datetime.datetime.now().strftime("%Y-%m-%d")
     sql = "insert into closed_accounts values(%s, %s)"
     cur.execute(sql, (acc_no, closed_on))
-    print("Account Closed Successfully !")
-    print("Rs ", balance, " will be delivered to your address shortly")
     con.commit()
+    return balance
 
 
 def get_loan_customer(acc_no, loan_amt, loan_term):
@@ -348,7 +347,6 @@ def change_password_customer(new_pass, _id):
     cur.execute(sql, (new_pass, _id))
 
     con.commit()
-    print("Password Updated Successfully")
 
 def get_customer_accounts(cus_id):
     sql = "select account_no,balance,opened_on, status, account_type from accounts where customer_id = %s"
