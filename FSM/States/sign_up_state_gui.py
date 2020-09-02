@@ -5,26 +5,41 @@ from tkinter import messagebox
 
 
 class SignUpStateGUI(SignUpState):
-    user_input = None
+    def __init__(self, state_machine, app):
+        super().__init__(state_machine, app)
+        self.main_frame = None
 
-    def input_sign_up(self):
+    def enter(self):
         def add():
-            print("add called")
-            self.user_input = {
+            try:
+                pincode = int(e7.get())
+                if pincode < 100000 or pincode > 999999:
+                    self.display_msg(["Invalid Pincode"])
+                    return
+            except:
+                self.display_msg(["Invalid Pincode"])
+                return
+            password = e8.get()
+            if len(password) < 8 or len(password) > 20:
+                self.display_msg(["Please Enter password in given range"])
+                return
+            self.sign_up({
                 "first-name": e1.get(),
                 "last-name": e2.get(),
                 "add-line1": e3.get(),
                 "add-line2": e4.get(),
                 "city": e5.get(),
                 "state": e6.get(),
-                "pincode": e7.get(),
-                "password": e8.get()
-            }
+                "pincode": pincode,
+                "password": password
+            })
 
-        master = tkinter.Tk()
-        master.geometry("300x300")
+        self.app.tk_master.title("Sign Up")
+        master = Frame(self.app.tk_master)
+        self.main_frame = master
+        master.pack()
+
         v = StringVar
-        master.title("entry")
         Label(master, text="first-name").grid(row=0)
         Label(master, text="last-name").grid(row=1)
         Label(master, text="add-line1").grid(row=2)
@@ -51,9 +66,11 @@ class SignUpStateGUI(SignUpState):
         e8.grid(row=7, column=1)
         b = Button(master, text="save", command=add)
         b.grid()
-        master.mainloop()
-        return self.user_input
+        self.app.tk_master.mainloop()
 
     def display_msg(self, msg):
-        messagebox.showinfo("info", "\n".join(msg))  # TODO: display msg array in msg box
-        root.destroy()
+        messagebox.showinfo("info", "\n".join(msg), parent=self.app.tk_master)
+
+    def exit(self):
+        self.main_frame.destroy()
+        self.main_frame = None

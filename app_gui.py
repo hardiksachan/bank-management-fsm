@@ -1,5 +1,7 @@
 import sys
 
+import tkinter
+
 from FSM.States.SignIn.change_address_state import ChangeAddressState
 from FSM.States.SignIn.manage_funds_cust_state import ManageFundsCustomerState
 from FSM.States.SignIn.open_account_state import OpenAccountState
@@ -16,6 +18,8 @@ class App:
 
     def __init__(self):
         self.state_Machine = StateMachine()
+        self.tk_master = tkinter.Tk()
+        self.tk_master.geometry("300x300")
         self.main_menu = MainMenuState(self.state_Machine, self)
         self.exit_state = ExitState(self.state_Machine, self)
         self.sign_up_state = SignUpStateGUI(self.state_Machine, self)
