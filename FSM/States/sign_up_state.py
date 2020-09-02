@@ -10,7 +10,7 @@ class SignUpState(State):
 
     def enter(self):
         self.showUI()
-        self.sign_up()
+        self.input_sign_up()
 
     def check_transitions(self):
         pass
@@ -18,10 +18,8 @@ class SignUpState(State):
     def showUI(self):
         print("--- Sign Up (New Customer) --- \n")
 
-    def sign_up(self):
+    def sign_up(self, user_input):
         customer: Customer = Customer()
-
-        user_input = self.input_sign_up()
 
         if user_input is None:
             self.display_msg(["Please try again!"])
@@ -72,7 +70,7 @@ class SignUpState(State):
             print("Please Enter password in given range\n> ")
             password = input()
 
-        return {
+        self.sign_up({
             "first-name": first_name,
             "last-name": last_name,
             "add-line1": add_line1,
@@ -81,4 +79,4 @@ class SignUpState(State):
             "state": state,
             "pincode": pincode,
             "password": password
-        }
+        })
