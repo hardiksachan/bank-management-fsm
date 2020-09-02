@@ -1,6 +1,8 @@
 import os
 from abc import abstractmethod, ABC
 
+from tabulate import tabulate
+
 from FSM.state_machine import StateMachine
 
 
@@ -47,4 +49,8 @@ class State(ABC):
     def display_msg(self, msg):
         for m in msg:
             print(m)
+        input("Press ENTER to continue...")
+
+    def display_table(self, db_res, headers):
+        print(tabulate(db_res, headers=headers, tablefmt="pretty"))
         input("Press ENTER to continue...")
