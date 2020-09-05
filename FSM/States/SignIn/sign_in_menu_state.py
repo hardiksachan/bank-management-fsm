@@ -21,11 +21,6 @@ class SignInState(SignInParentState):
             self.showUI()
         else:
             self.input_sign_in()
-            if self.id is not None:
-                self.showUI()
-            else:
-                self.selection = 0
-                self.check_transitions()
 
     def check_transitions(self):
         if self.id is None:
@@ -73,7 +68,6 @@ class SignInState(SignInParentState):
             customer: Customer = database.get_all_info_customer(c_id)
             if customer.get_status() == CustomerStatus.locked.value:
                 self.display_msg(["Sorry Your Account has been locked due to 3 unsuccessful login attempts"])
-                return
             res = database.login_customer(c_id, password)
             if res:
                 database.reset_login_attempts(c_id)
@@ -86,6 +80,11 @@ class SignInState(SignInParentState):
                 self.display_msg(["Incorrect Password"])
         else:
             self.display_msg(["Customer doesn't exist"])
+        if self.id is not None:
+            self.showUI()
+        else:
+            self.selection = 0
+            self.check_transitions()
 
     def input_sign_in(self):
         try:
