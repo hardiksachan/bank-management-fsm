@@ -5,14 +5,14 @@ from tabulate import tabulate
 import database
 import db_admin
 import validate
-from FSM.States.SignIn.sign_in_base_state import SignInParentState
+from ScreenManager.Screens.SignIn.sign_in_base_screen import SignInParentScreen
 from classes.accounts import AccountStatus
 from classes.customer import CustomerStatus, Customer
 
 
-class SignInState(SignInParentState):
-    def __init__(self, state_machine, app):
-        super().__init__(state_machine, app)
+class SignInScreen(SignInParentScreen):
+    def __init__(self, screen_manager, app):
+        super().__init__(screen_manager, app)
         self.lower_bound = 0
         self.upper_bound = 7
 
@@ -29,15 +29,13 @@ class SignInState(SignInParentState):
 
     def check_transitions(self):
         if self.id is None:
-            self.state_machine.change_state(self.app.main_menu)
+            self.screen_manager.change_screen(self.app.main_menu)
         elif self.selection == 1:
-            # self.app.address_update_state.set_id(self.id)
-            self.state_machine.change_state(self.app.address_update_state)
+            self.screen_manager.change_screen(self.app.address_update_screen)
         elif self.selection == 2:
-            # self.app.open_new_account_state.set_id(self.id)
-            self.state_machine.change_state(self.app.open_new_account_state)
-        elif self.selection ==3:
-            self.state_machine.change_state(self.app.manage_funds_customer_state)
+            self.screen_manager.change_screen(self.app.open_new_account_screen)
+        elif self.selection == 3:
+            self.screen_manager.change_screen(self.app.manage_funds_customer_screen)
         elif self.selection == 4:
             self.print_statement()
             input("\nPress ENTER to continue...")
@@ -55,10 +53,10 @@ class SignInState(SignInParentState):
             input("\nPress ENTER to continue...")
             self.showUI()
         elif self.selection == 0:
-            self.set_id_all_states(None)
-            self.state_machine.change_state(self.app.main_menu)
+            self.set_id_for_all_screens(None)
+            self.screen_manager.change_screen(self.app.main_menu)
         else:
-            self.state_machine.change_state(self.app.main_menu)
+            self.screen_manager.change_screen(self.app.main_menu)
 
     def showUI(self):
         os.system('cls||clear')
@@ -89,7 +87,7 @@ class SignInState(SignInParentState):
             res = database.login_customer(id, password)
             if res:
                 database.reset_login_attempts(id)
-                self.set_id_all_states(id)
+                self.set_id_for_all_screens(id)
                 print("Login Successful")
             else:
                 att = customer.get_login_attempts() - 1
@@ -101,13 +99,13 @@ class SignInState(SignInParentState):
             print("Customer doesn't exist")
 
     def logout(self):
-        self.set_id_all_states(None)
+        self.set_id_for_all_screens(None)
 
-    def set_id_all_states(self, _id):
+    def set_id_for_all_screens(self, _id):
         self.id = _id
-        self.app.address_update_state.set_id(_id)
-        self.app.open_new_account_state.set_id(_id)
-        self.app.manage_funds_customer_state.set_id(_id)
+        self.app.address_update_screen.set_id(_id)
+        self.app.open_new_account_screen.set_id(_id)
+        self.app.manage_funds_customer_screen.set_id(_id)
         # TODO: Add more states when implemented
 
     def print_statement(self):
@@ -123,7 +121,8 @@ class SignInState(SignInParentState):
             date_to = input("Date To : ")
             if validate.validate_date(date_from, date_to):
                 res = database.get_transactions_account(acc_no, date_from, date_to)
-                print(tabulate(res, headers=["Date", "Transaction Type", "Amount", "Balance", "Account Type"], tablefmt="pretty"))
+                print(tabulate(res, headers=["Date", "Transaction Type", "Amount", "Balance", "Account Type"],
+                               tablefmt="pretty"))
             else:
                 print("Please Enter Valid Dates")
 

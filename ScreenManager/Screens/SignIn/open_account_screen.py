@@ -4,24 +4,23 @@ from tabulate import tabulate
 
 import database
 import db_admin
-from FSM.States.SignIn.sign_in_base_state import SignInParentState
+from ScreenManager.Screens.SignIn.sign_in_base_screen import SignInParentScreen
 from classes.accounts import AccountType
 from classes.current_account import Current
 from classes.fixed_deposit_account import FixedDeposit
 from classes.savings_account import Savings
 
 
-class OpenAccountState(SignInParentState):
+class OpenAccountScreen(SignInParentScreen):
 
-    def __init__(self, state_machine, app):
-        super().__init__(state_machine, app)
+    def __init__(self, screen_manager, app):
+        super().__init__(screen_manager, app)
         self.lower_bound = 0
         self.upper_bound = 3
 
     def check_transitions(self):
         if self.selection == 0:
-            # self.app.sign_in_state.set_id(self.id)
-            self.state_machine.change_state(self.app.sign_in_state)
+            self.screen_manager.change_screen(self.app.sign_in_screen)
         else:
             self.open_new_account()
             input("\nPress ENTER to continue...")

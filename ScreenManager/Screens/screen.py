@@ -1,14 +1,14 @@
 import os
 from abc import abstractmethod, ABC
 
-from FSM.state_machine import StateMachine
+from ScreenManager.screen_manager import ScreenManager
 
 
-class State(ABC):
-    state_machine: StateMachine
+class Screen(ABC):
+    screen_manager: ScreenManager
 
-    def __init__(self, state_machine, app):
-        self.state_machine = state_machine
+    def __init__(self, screen_manager, app):
+        self.screen_manager = screen_manager
         self.app = app
         self.selection = -1
         self.lower_bound = -1

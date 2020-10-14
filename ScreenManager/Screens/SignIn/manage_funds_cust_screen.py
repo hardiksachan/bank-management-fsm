@@ -4,12 +4,12 @@ from tabulate import tabulate
 
 import database
 import db_admin
-from FSM.States.SignIn.sign_in_base_state import SignInParentState
+from ScreenManager.Screens.SignIn.sign_in_base_screen import SignInParentScreen
 
 
-class ManageFundsCustomerState(SignInParentState):
-    def __init__(self, state_machine, app):
-        super().__init__(state_machine, app)
+class ManageFundsCustomerScreen(SignInParentScreen):
+    def __init__(self, screen_manager, app):
+        super().__init__(screen_manager, app)
         self.lower_bound = 0
         self.upper_bound = 4
 
@@ -35,7 +35,7 @@ class ManageFundsCustomerState(SignInParentState):
             self.showUI()
             self.update_selection()
         elif self.selection == 0:
-            self.state_machine.change_state(self.app.sign_in_state)
+            self.screen_manager.change_screen(self.app.sign_in_screen)
 
     def showUI(self):
         os.system('cls||clear')

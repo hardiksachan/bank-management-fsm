@@ -1,13 +1,13 @@
 import os
 
 import database
-from FSM.States.state import State
+from ScreenManager.Screens.screen import Screen
 
 
-class ChangeAddressState(State):
+class ChangeAddressScreen(Screen):
 
-    def __init__(self, state_machine, app):
-        super().__init__(state_machine, app)
+    def __init__(self, screen_manager, app):
+        super().__init__(screen_manager, app)
         self.id = None
         self.lower_bound = 0
         self.upper_bound = 5
@@ -16,14 +16,13 @@ class ChangeAddressState(State):
         if self.id is None:
             print("Please Sign In First!")
             input("Press ENTER to continue...")
-            self.state_machine.change_state(self.app.sign_in_state)
+            self.screen_manager.change_screen(self.app.sign_in_screen)
         self.showUI()
         self.update_selection()
 
     def check_transitions(self):
         if self.selection == 0:
-            # self.app.sign_in_state.set_id(self.id)
-            self.state_machine.change_state(self.app.sign_in_state)
+            self.screen_manager.change_screen(self.app.sign_in_screen)
         else:
             self.update_address()
 

@@ -1,11 +1,11 @@
 from abc import ABC
 
-from FSM.States.state import State
+from ScreenManager.Screens.screen import Screen
 
 
-class SignInParentState(State, ABC):
-    def __init__(self, state_machine, app):
-        super().__init__(state_machine, app)
+class SignInParentScreen(Screen, ABC):
+    def __init__(self, screen_manager, app):
+        super().__init__(screen_manager, app)
         self.id = None
 
     def set_id(self, _id):
@@ -15,6 +15,6 @@ class SignInParentState(State, ABC):
         if self.id is None:
             print("Please Sign In First!")
             input("Press ENTER to continue...")
-            self.state_machine.change_state(self.app.sign_in_state)
+            self.screen_manager.change_screen(self.app.sign_in_screen)
         self.showUI()
         self.update_selection()

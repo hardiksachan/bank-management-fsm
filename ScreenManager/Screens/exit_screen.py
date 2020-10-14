@@ -1,15 +1,13 @@
-import sys
-
-from FSM.States.state import State
+from ScreenManager.Screens.screen import Screen
 
 
-class ExitState(State):
+class ExitScreen(Screen):
 
     def enter(self):
         self.showUI()
 
-    def __init__(self, state_machine, app):
-        super().__init__(state_machine, app)
+    def __init__(self, screen_manager, app):
+        super().__init__(screen_manager, app)
 
     def showUI(self):
         print("Bye!!")

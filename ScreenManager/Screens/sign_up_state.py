@@ -1,12 +1,12 @@
 import database
-from FSM.States.state import State
+from ScreenManager.Screens.screen import Screen
 from classes.Address import Address
 from classes.customer import Customer, CustomerStatus
 
 
-class SignUpState(State):
-    def __init__(self, state_machine, app):
-        super().__init__(state_machine, app)
+class SignUpScreen(Screen):
+    def __init__(self, screen_manager, app):
+        super().__init__(screen_manager, app)
 
     def enter(self):
         self.showUI()
@@ -59,4 +59,4 @@ class SignUpState(State):
 
         input("\nPress ENTER to continue...")
 
-        self.state_machine.change_state(self.app.main_menu)
+        self.screen_manager.change_screen(self.app.main_menu)
